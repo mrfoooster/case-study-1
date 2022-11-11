@@ -38,9 +38,9 @@ docker-build:
 deploy:
   stage: deploy
   before_script:
-    - CHMOD 400 $SSH_KEY_MINIKUBE
+    - chmod 400 $SSH_KEY_MINIKUBE
   script: 
-    - minikube ssh -o StrictHostKeyCheck=no -i $SSH_KEY_MINIKUBE 
+    - minikube ssh -i $SSH_KEY_MINIKUBE 
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY 
     - docker ps -aq | xargs docker stop | xargs docker rm 
     - docker run -d -p 5000:5000 $CI_REGISTRY_IMAGE
