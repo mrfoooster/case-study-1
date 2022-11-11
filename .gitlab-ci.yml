@@ -1,7 +1,10 @@
 stages:
   - build
   - test
-  - docker-build
+  - docker-build-main
+  - docker-build-production
+  - deploy-main
+  - deploy-production
 
 build:
   stage: build
@@ -21,8 +24,8 @@ test:
     - CI=true npm test
     - echo "Test succesfully"
 
-docker-build:
-  stage: docker-build
+docker-build-main:
+  stage: docker-build-main
   image: docker:latest
   services:
     - name: docker:20.10.17-dind
@@ -31,5 +34,19 @@ docker-build:
   script:
     - docker build --pull -t "$CI_REGISTRY_IMAGE" .
     - docker push "$CI_REGISTRY_IMAGE"
+  only:
+    - main
 
+docker-build-production:
+  stage: docker-build-production
+  image: docker:latest
+  services:
+    - name: docker:20.10.17-dind
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+  script:
+    - docker build --pull -t "$CI_REGISTRY_IMAGE" .
+    - docker push "$CI_REGISTRY_IMAGE"
+  only:
+    - production
 
