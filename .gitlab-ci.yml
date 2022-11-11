@@ -1,7 +1,8 @@
 stages:
   - build
   - test
-  - docker-build-main
+  - docker-build
+  - deploy
 
 build:
   stage: build
@@ -22,7 +23,7 @@ test:
     - echo "Test succesfully"
 
 docker-build:
-  stage: docker-build-main
+  stage: docker-build
   image: docker:latest
   services:
     - name: docker:20.10.17-dind
@@ -33,6 +34,16 @@ docker-build:
     - docker push "$CI_REGISTRY_IMAGE"
   only:
     - main
+
+deploy:
+  stage: deploy
+  before_script:
+    - CHMOD 400 $SSH_KEY
+  script:
+    - ssh -o StrictHostKeyCheck=no -i $SSH_KEY root@178.62.28.179
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY 
+    - docker ps -aq | xargs docker stop | xargs docker rm 
+    - docker run -d -p 5000:5000 $CI_REGISTRY_IMAGE
 
 
 
