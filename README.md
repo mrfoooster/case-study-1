@@ -44,3 +44,4 @@ Then: "minikube ssh"  this line will bring us into the cluster, from we can gene
 to the gitlab. 
 
 
+For minikube: This is the first time i have used this local cluster with gitlab, thus there are errors i was unable to fix, and the final result with the minikube led to issues and inconsistencies.
