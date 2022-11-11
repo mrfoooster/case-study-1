@@ -1,7 +1,7 @@
 stages:
   - build
   - test
-  - docker-build
+  - docker-build-test
   - deploy
 
 build:
@@ -23,7 +23,7 @@ test:
     - echo "Test succesfully"
 
 docker-build:
-  stage: docker-build
+  stage: docker-build-test
   image: docker:latest
   services:
     - name: docker:20.10.17-dind
