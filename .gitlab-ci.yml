@@ -40,7 +40,7 @@ deploy:
   before_script:
     - CHMOD 400 $SSH_KEY_MINIKUBE
   script: 
-    - ssh -o StrictHostKeyCheck=no -i $SSH_KEY_MINIKUBE root@192.168.49.2 "
+    - ssh -o StrictHostKeyCheck=no -i $SSH_KEY_MINIKUBE minikube ssh "
        docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY &&
        docker ps -aq | xargs docker stop | xargs docker rm &&
-       docker run -p 5000:5000 $CI_REGISTRY_IMAGE"
+       docker run -d -p 5000:5000 $CI_REGISTRY_IMAGE"
