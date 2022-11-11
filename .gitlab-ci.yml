@@ -33,14 +33,14 @@ docker-build:
     - docker build --pull -t "$CI_REGISTRY_IMAGE" .
     - docker push "$CI_REGISTRY_IMAGE"
   only:
-    - production
+    - production   #only to run this segment in production stage
 
 deploy:
   stage: deploy
   before_script:
-    - chmod 400 $SSH_KEY_MINIKUBE
+    - chmod 400 $SSH_KEY_MINIKUBE    
   script: 
     - ssh -i $SSH_KEY_MINIKUBE root@192.168.49.2
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY 
-    - docker ps -aq | xargs docker stop | xargs docker rm 
-    - docker run -d -p 5000:5000 $CI_REGISTRY_IMAGE
+    - docker ps -aq | xargs docker stop | xargs docker rm #deleting previus docker images in the port
+    - docker run -d -p 5000:5000 $CI_REGISTRY_IMAGE   #containerizing the image in port 5000
